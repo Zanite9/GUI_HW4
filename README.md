@@ -1,4 +1,4 @@
-# Assignment: GUI HW3
+# Assignment: GUI HW4
 
 # Student Name: Sunveer Dhillon
 # Email Address: sunveer_dhillon@student.uml.edu
