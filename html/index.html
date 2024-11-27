@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Multiplication Table</title>
+    <!-- include jquery ui stylesheet -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <!-- include custom styles -->
+    <link rel="stylesheet" href="../css/style.css">
+    <!-- include jquery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- include jquery ui library -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <!-- include jquery validation plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <!-- include custom javascript -->
+    <script src="../js/mult.js"></script>
+</head>
+<body>
+    <!-- page title -->
+    <h1>Dynamic Multiplication Table</h1>
+    <div class="formDiv">
+        <!-- section header -->
+        <h4>Set Table Parameters</h4>
+        <form id="input-form">
+            <!-- input for minimum rows -->
+            <label for="min-rows">Min Rows:</label>
+            <input type="text" id="min-rows" name="min-rows" required>
+            <div class="slider" id="slider-min-rows"></div>
+
+            <!-- input for maximum rows -->
+            <label for="max-rows">Max Rows:</label>
+            <input type="text" id="max-rows" name="max-rows" required>
+            <div class="slider" id="slider-max-rows"></div>
+
+            <!-- input for minimum columns -->
+            <label for="min-cols">Min Columns:</label>
+            <input type="text" id="min-cols" name="min-cols" required>
+            <div class="slider" id="slider-min-cols"></div>
+
+            <!-- input for maximum columns -->
+            <label for="max-cols">Max Columns:</label>
+            <input type="text" id="max-cols" name="max-cols" required>
+            <div class="slider" id="slider-max-cols"></div>
+
+            <!-- button to generate the table -->
+            <div class="buttonsDiv">
+                <button type="submit" id="generate-table">Generate Table</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- section for tabs -->
+    <div id="tabs">
+        <ul id="tabs-list">
+            <!-- default tab -->
+            <li><a href="#tab-initial">Input Parameters</a></li>
+        </ul>
+        <div id="tab-initial">
+            <p>Use the controls to create a dynamic table.</p>
+        </div>
+    </div>
+
+    <!-- container for the table -->
+    <div id="mult_container"></div>
+
+    <script>
+        $(function () {
+            // function to setup sliders for inputs
+            function setupSlider(sliderId, inputId, min, max) {
+                $(sliderId).slider({
+                    min: min, // set minimum value
+                    max: max, // set maximum value
+                    slide: function (event, ui) {
+                        $(inputId).val(ui.value); // update input value when slider moves
+                    }
+                });
+                // update slider value when input changes
+                $(inputId).on("input", function () {
+                    const value = parseInt($(this).val());
+                    if (value >= min && value <= max) {
+                        $(sliderId).slider("value", value);
+                    }
+                });
+            }
+
+            // setup sliders for all inputs
+            setupSlider("#slider-min-rows", "#min-rows", 1, 50);
+            setupSlider("#slider-max-rows", "#max-rows", 1, 50);
+            setupSlider("#slider-min-cols", "#min-cols", 1, 50);
+            setupSlider("#slider-max-cols", "#max-cols", 1, 50);
+
+            // initialize jquery ui tabs
+            $("#tabs").tabs();
+
+            // setup validation for the input form
+            $("#input-form").validate({
+                rules: {
+                    "min-rows": { required: true, digits: true, min: 1, max: 50 },
+                    "max-rows": { required: true, digits: true, min: 1, max: 50 },
+                    "min-cols": { required: true, digits: true, min: 1, max: 50 },
+                    "max-cols": { required: true, digits: true, min: 1, max: 50 }
+                },
+                messages: {
+                    "min-rows": { required: "Min Rows is required.", digits: "Only numbers.", min: "Min 1.", max: "Max 50." },
+                    "max-rows": { required: "Max Rows is required.", digits: "Only numbers.", min: "Min 1.", max: "Max 50." },
+                    "min-cols": { required: "Min Columns is required.", digits: "Only numbers.", min: "Min 1.", max: "Max 50." },
+                    "max-cols": { required: "Max Columns is required.", digits: "Only numbers.", min: "Min 1.", max: "Max 50." }
+                },
+                submitHandler: function () {
+                    // trigger table generation on valid submission
+                    $("#generate-table").trigger("click");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
